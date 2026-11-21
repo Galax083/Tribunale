@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0d1117" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>Il Tribunale — Gemini Jury</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface-2: #1f2630;
+      --border: #30363d;
+      --text: #e6edf3;
+      --muted: #8b949e;
+      --accent: #58a6ff;
+      --danger: #f85149;
+      --danger-bg: rgba(248, 81, 73, 0.14);
+      --success: #3fb950;
+      --success-bg: rgba(63, 185, 80, 0.14);
+      --warn: #d29922;
+      --warn-bg: rgba(210, 153, 34, 0.14);
+      --opt-a: #58a6ff;
+      --opt-a-bg: rgba(88, 166, 255, 0.14);
+      --opt-b: #bc8cff;
+      --opt-b-bg: rgba(188, 140, 255, 0.14);
+      --radius: 12px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+    }
+
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 15px;
+      line-height: 1.5;
+      padding-bottom: calc(28px + env(safe-area-inset-bottom));
+    }
+
+    .app {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 14px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 6px 2px 14px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 9px;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, opacity 0.15s;
+    }
+
+    button:active { transform: scale(0.98); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #081018;
+    }
+
+    .btn-danger {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .btn-sm {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      margin-bottom: 12px;
+    }
+
+    .card h2, .card h3 {
+      margin: 0 0 10px;
+      font-size: 1rem;
+    }
+
+    .alert {
+      padding: 10px 12px;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .alert-warn {
+      background: var(--warn-bg);
+      border-color: var(--warn);
+      color: #f0c96a;
+    }
+
+    .alert-err {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: #ff9490;
+    }
+
+    .alert-ok {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: #7ee787;
+    }
+
+    .hidden { display: none !important; }
+
+    label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 5px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="number"],
+    textarea,
+    select {
+      width: 100%;
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 12px;
+      font-family: inherit;
+      font-size: 0.94rem;
+      margin-bottom: 12px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 92px;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    @media (max-width: 560px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 3px;
+      margin-bottom: 12px;
+    }
+
+    .segmented button {
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      padding: 8px;
+      font-size: 0.86rem;
+      border-radius: 7px;
+    }
+
+    .segmented button.active {
+      background: var(--surface-2);
+      color: var(--text);
+    }
+
+    .row-between {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.86rem;
+      color: var(--text);
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .toggle-row input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      margin: 0;
+    }
+
+    /* Progress */
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--bg);
+      border-radius: 99px;
+      overflow: hidden;
+      margin: 8px 0;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--accent);
+      transition: width 0.25s ease;
+    }
+
+    .status-log {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+    }
+
+    /* Live Jury Pills */
+    .jury-grid-live {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .juror-pill {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 7px 9px;
+      font-size: 0.78rem;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .juror-pill .jp-name {
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .juror-pill .jp-state {
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .juror-pill.vote-bad { border-color: var(--danger); background: var(--danger-bg); }
+    .juror-pill.vote-good { border-color: var(--success); background: var(--success-bg); }
+    .juror-pill.vote-a { border-color: var(--opt-a); background: var(--opt-a-bg); }
+    .juror-pill.vote-b { border-color: var(--opt-b); background: var(--opt-b-bg); }
+    .juror-pill.vote-retry { border-color: var(--warn); background: var(--warn-bg); }
+
+    /* Tabs */
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 6px;
+      margin-bottom: 12px;
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      padding: 6px 0;
+      z-index: 10;
+    }
+
+    .tabs button {
+      padding: 8px 4px;
+      font-size: 0.8rem;
+      text-align: center;
+      background: var(--surface);
+      color: var(--muted);
+    }
+
+    .tabs button.active {
+      background: var(--surface-2);
+      border-color: var(--accent);
+      color: var(--text);
+    }
+
+    /* Verdict Banner */
+    .verdict-box {
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .verdict-box.bad { background: var(--danger-bg); border-color: var(--danger); }
+    .verdict-box.good { background: var(--success-bg); border-color: var(--success); }
+    .verdict-box.tie { background: var(--warn-bg); border-color: var(--warn); }
+    .verdict-box.opt-a { background: var(--opt-a-bg); border-color: var(--opt-a); }
+    .verdict-box.opt-b { background: var(--opt-b-bg); border-color: var(--opt-b); }
+
+    .verdict-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 0 0 4px;
+    }
+
+    .verdict-score {
+      font-size: 0.92rem;
+      font-weight: 600;
+      opacity: 0.92;
+      margin-bottom: 10px;
+    }
+
+    .vote-bar {
+      display: flex;
+      height: 12px;
+      border-radius: 99px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.35);
+    }
+
+    .vote-bar-left { height: 100%; transition: width 0.3s; }
+    .vote-bar-right { height: 100%; transition: width 0.3s; }
+
+    /* Juror List Cards */
+    .juror-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 9px;
+    }
+
+    .juror-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 99px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .badge-bad { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+    .badge-good { background: var(--success-bg); color: var(--success); border: 1px solid var(--success); }
+    .badge-a { background: var(--opt-a-bg); color: var(--opt-a); border: 1px solid var(--opt-a); }
+    .badge-b { background: var(--opt-b-bg); color: var(--opt-b); border: 1px solid var(--opt-b); }
+    .badge-tag { background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); font-weight: 500; }
+
+    .juror-lens {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .juror-reason {
+      font-size: 0.9rem;
+      margin: 0;
+    }
+
+    /* Accordion / Atti */
+    details.act-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      margin-bottom: 10px;
+      overflow: hidden;
+    }
+
+    details.act-box summary {
+      padding: 12px 14px;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface-2);
+    }
+
+    details.act-box summary::-webkit-details-marker { display: none; }
+    details.act-box summary::after { content: "+"; font-size: 1.1rem; color: var(--muted); }
+    details.act-box[open] summary::after { content: "−"; }
+
+    .act-content {
+      padding: 12px 14px;
+      font-size: 0.9rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .act-content p { margin: 0 0 9px; }
+    .act-content p:last-child { margin-bottom: 0; }
+    .act-content ul { margin: 6px 0 10px; padding-left: 20px; }
+    .act-content li { margin-bottom: 5px; }
+
+    .cond-list {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .cond-list li { margin-bottom: 8px; }
+
+    .filter-bar {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-bar button.active {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .history-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      margin-bottom: 8px;
+      cursor: pointer;
+    }
+
+    .history-item:hover { border-color: var(--accent); }
+
+    .muted { color: var(--muted); font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <h1>Il Tribunale</h1>
+        <p>12 giurati isolati via Gemini API</p>
+      </div>
+      <div class="header-actions">
+        <button id="btn-settings" class="btn-sm" type="button">Impostazioni</button>
+      </div>
+    </header>
+
+    <div id="env-warning" class="alert alert-warn hidden"></div>
+    <div id="global-error" class="alert alert-err hidden"></div>
+
+    <!-- PANNELLO IMPOSTAZIONI -->
+    <section id="settings-panel" class="card hidden">
+      <div class="row-between" style="margin-bottom:10px;">
+        <h2 style="margin:0;">Configurazione API e Modelli</h2>
+        <button id="btn-close-settings" class="btn-sm" type="button">Chiudi</button>
+      </div>
+
+      <label for="api-key">Gemini API Key (salvata solo in locale nel browser)</label>
+      <input id="api-key" type="password" placeholder="AIza..." autocomplete="off" />
+
+      <div class="grid-2">
+        <div>
+          <label for="model-heavy">Modello Accusa / Difesa / Giudice</label>
+          <input id="model-heavy" type="text" list="gemini-models" />
+        </div>
+        <div>
+          <label for="model-juror">Modello 12 Giurati</label>
+          <input id="model-juror" type="text" list="gemini-models" />
+        </div>
+      </div>
+
+      <datalist id="gemini-models">
+        <option value="gemini-2.5-pro"></option>
+        <option value="gemini-2.5-flash"></option>
+        <option value="gemini-2.5-flash-lite"></option>
+      </datalist>
+
+      <div class="grid-2">
+        <div>
+          <label for="concurrency">Richieste parallele max (anti-429)</label>
+          <select id="concurrency">
+            <option value="1">1 (ultra-sicuro free tier)</option>
+            <option value="2">2 (sicuro free tier)</option>
+            <option value="3" selected>3 (bilanciato — consigliato)</option>
+            <option value="4">4 (veloce)</option>
+            <option value="6">6 (tier a pagamento)</option>
+            <option value="12">12 (tutti insieme — billing attivo)</option>
+          </select>
+        </div>
+        <div>
+          <label for="juror-temp">Temperatura Giurati (0.1 – 1.2)</label>
+          <input id="juror-temp" type="number" min="0.1" max="1.2" step="0.05" value="0.7" />
+        </div>
+      </div>
+
+      <div class="row-between">
+        <div style="display:flex; gap:8px;">
+          <button id="btn-save-settings" class="btn-primary btn-sm" type="button">Salva</button>
+          <button id="btn-test-key" class="btn-sm" type="button">Testa API Key</button>
+        </div>
+        <button id="btn-clear-key" class="btn-danger btn-sm" type="button">Cancella chiave</button>
+      </div>
+      <div id="settings-msg" class="muted" style="margin-top:8px;"></div>
+    </section>
+
+    <!-- PANNELLO INPUT CASO -->
+    <section id="input-panel" class="card">
+      <div class="segmented" role="tablist">
+        <button id="mode-single" class="active" type="button">Singola Idea (Colpevole / Assolta)</button>
+        <button id="mode-ab" type="button">Confronto A vs B</button>
+      </div>
+
+      <div id="single-inputs">
+        <label for="idea-text">Idea, decisione o dilemma da mettere sotto processo</label>
+        <textarea id="idea-text" placeholder="Es. Lasciare il lavoro attuale per avviare X con budget Y e orizzonte 12 mesi..."></textarea>
+      </div>
+
+      <div id="ab-inputs" class="hidden">
+        <div class="grid-2">
+          <div>
+            <label for="opt-a-text">Opzione A</label>
+            <textarea id="opt-a-text" style="min-height:74px;" placeholder="Descrivi l'Opzione A..."></textarea>
+          </div>
+          <div>
+            <label for="opt-b-text">Opzione B</label>
+            <textarea id="opt-b-text" style="min-height:74px;" placeholder="Descrivi l'Opzione B..."></textarea>
+          </div>
+        </div>
+        <label for="ab-context">Contesto, budget e vincoli (opzionale)</label>
+        <textarea id="ab-context" style="min-height:66px;" placeholder="Budget, tempistiche, vincoli non negoziabili, priorità..."></textarea>
+      </div>
+
+      <label class="toggle-row">
+        <input id="chk-phase0" type="checkbox" checked />
+        <span>Fase 0: verifica prima se mancano dati critici (2–3 domande)</span>
+      </label>
+
+      <div class="row-between">
+        <button id="btn-start" class="btn-primary" type="button" style="flex:1;">Avvia Processo</button>
+        <button id="btn-abort" class="btn-danger hidden" type="button">Annulla</button>
+      </div>
+    </section>
+
+    <!-- FASE 0: DOMANDE PRELIMINARI -->
+    <section id="phase0-panel" class="card hidden">
+      <h3>Fase 0 — Dati mancanti rilevati</h3>
+      <p class="muted" style="margin-top:0;">Rispondi brevemente per evitare ipotesi arbitrarie di Accusa e Difesa, oppure procedi subito con ipotesi dichiarate.</p>
+      <div id="phase0-questions"></div>
+      <div class="row-between" style="margin-top:8px;">
+        <button id="btn-phase0-submit" class="btn-primary" type="button" style="flex:1;">Integra e avvia processo</button>
+        <button id="btn-phase0-skip" type="button">Salta (usa ipotesi)</button>
+      </div>
+    </section>
+
+    <!-- STATO AVANZAMENTO LIVE -->
+    <section id="progress-panel" class="card hidden">
+      <div class="row-between">
+        <strong id="progress-title">Preparazione...</strong>
+        <span id="progress-pct" class="muted">0%</span>
+      </div>
+      <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+      <div id="status-log" class="status-log">In attesa...</div>
+      <div id="jury-live-grid" class="jury-grid-live hidden"></div>
+    </section>
+
+    <!-- RISULTATI E STORICO -->
+    <div id="results-wrapper" class="hidden">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="verdict" type="button">Verdetto</button>
+        <button class="tab-btn" data-tab="jury" type="button">12 Giurati</button>
+        <button class="tab-btn" data-tab="acts" type="button">Atti</button>
+        <button class="tab-btn" data-tab="history" type="button">Storico</button>
+      </div>
+
+      <section id="tab-verdict" class="tab-pane"></section>
+      <section id="tab-jury" class="tab-pane hidden"></section>
+      <section id="tab-acts" class="tab-pane hidden"></section>
+      <section id="tab-history" class="tab-pane hidden"></section>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const STORAGE_KEYS = {
+        API_KEY: "tribunale_gemini_api_key",
+        SETTINGS: "tribunale_gemini_settings",
+        HISTORY: "tribunale_gemini_history"
+      };
+
+      const FIXED_JURORS = [
+        {
+          nome: "Il Contabile",
+          prospettiva: "Guarda solo numeri, costi diretti e nascosti, cassa, margini e costo-opportunità reale.",
+          tipo: "Fisso"
+        },
+        {
+          nome: "L'Operatore Pragmatico",
+          prospettiva: "Valuta tempo reale, fatica, attrito quotidiano, logistica e punti esatti di rottura operativa.",
+          tipo: "Fisso"
+        },
+        {
+          nome: "Lo Scettico dei Rischi",
+          prospettiva: "Cerca il worst-case scenario realistico, l'irreversibilità della scelta e i punti ciechi ignorati.",
+          tipo: "Fisso"
+        },
+        {
+          nome: "Lo Stratega a 3-5 Anni",
+          prospettiva: "Valuta effetti di secondo ordine: se la decisione apre opzioni future o chiude in un vicolo cieco.",
+          tipo: "Fisso"
+        },
+        {
+          nome: "Il Cinico Disincantato",
+          prospettiva: "Individua autoinganni, bias cognitivi (sunk cost, bias di conferma) e cosa accade quando cala la motivazione.",
+          tipo: "Fisso"
+        },
+        {
+          nome: "Il Minimizzatore",
+          prospettiva: "Verifica se esiste un'alternativa più semplice che ottiene l'80% del risultato con il 20% dello sforzo o del rischio.",
+          tipo: "Fisso"
+        }
+      ];
+
+      const DEFAULT_SETTINGS = {
+        modelHeavy: "gemini-2.5-pro",
+        modelJuror: "gemini-2.5-flash",
+        concurrency: 3,
+        jurorTemp: 0.7
+      };
+
+      // Stato runtime
+      let currentMode = "single"; // "single" | "ab"
+      let abortController = null;
+      let pendingCaseText = "";
+      let currentResult = null;
+      let juryFilter = "ALL";
+
+      // DOM helpers
+      const $ = (id) => document.getElementById(id);
+
+      function safeStorageGet(key, fallback = null) {
+        try {
+          const v = localStorage.getItem(key);
+          return v !== null ? v : fallback;
+        } catch {
+          return fallback;
+        }
+      }
+
+      function safeStorageSet(key, val) {
+        try {
+          localStorage.setItem(key, val);
+          return true;
+        } catch {
+          return false;
+        }
+      }
+
+      function safeStorageRemove(key) {
+        try { localStorage.removeItem(key); } catch {}
+      }
+
+      function escapeHtml(str) {
+        return String(str || "")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;");
+      }
+
+      // Renderer Markdown minimale e sicuro per Accusa/Difesa/Repliche
+      function renderSimpleMarkdown(md) {
+        const lines = String(md || "").replace(/\r\n/g, "\n").split("\n");
+        let html = "";
+        let inList = false;
+
+        const inlineFmt = (txt) => escapeHtml(txt)
+          .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+          .replace(/`([^`]+)`/g, "<code>$1</code>");
+
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+          if (!line) {
+            if (inList) { html += "</ul>"; inList = false; }
+            continue;
+          }
+          if (/^[-*•]\s+/.test(line) || /^\d+\.\s+/.test(line)) {
+            if (!inList) { html += "<ul>"; inList = true; }
+            const clean = line.replace(/^([-*•]|\d+\.)\s+/, "");
+            html += `<li>${inlineFmt(clean)}</li>`;
+          } else if (/^#{1,4}\s+/.test(line)) {
+            if (inList) { html += "</ul>"; inList = false; }
+            html += `<p><strong>${inlineFmt(line.replace(/^#{1,4}\s+/, ""))}</strong></p>`;
+          } else {
+            if (inList) { html += "</ul>"; inList = false; }
+            html += `<p>${inlineFmt(line)}</p>`;
+          }
+        }
+        if (inList) html += "</ul>";
+        return html || "<p class='muted'>Nessun contenuto.</p>";
+      }
+
+      function getSettings() {
+        try {
+          const saved = JSON.parse(safeStorageGet(STORAGE_KEYS.SETTINGS, "{}"));
+          return { ...DEFAULT_SETTINGS, ...saved };
+        } catch {
+          return { ...DEFAULT_SETTINGS };
+        }
+      }
+
+      function getApiKey() {
+        return ($("api-key").value.trim() || safeStorageGet(STORAGE_KEYS.API_KEY, "")).trim();
+      }
+
+      function showError(msg) {
+        const box = $("global-error");
+        if (!msg) {
+          box.classList.add("hidden");
+          box.textContent = "";
+          return;
+        }
+        box.textContent = msg;
+        box.classList.remove("hidden");
+      }
+
+      function setProgress(title, pct, logLine) {
+        $("progress-panel").classList.remove("hidden");
+        $("progress-title").textContent = title;
+        $("progress-pct").textContent = `${Math.round(pct)}%`;
+        $("progress-fill").style.width = `${Math.min(100, Math.max(0, pct))}%`;
+        if (logLine) $("status-log").textContent = logLine;
+      }
+
+      function sleep(ms, signal) {
+        return new Promise((resolve, reject) => {
+          if (signal?.aborted) return reject(new DOMException("Annullato", "AbortError"));
+          const t = setTimeout(resolve, ms);
+          signal?.addEventListener("abort", () => {
+            clearTimeout(t);
+            reject(new DOMException("Annullato", "AbortError"));
+          }, { once: true });
+        });
+      }
+
+      // Esegue task asincroni con concorrenza limitata (mantenendo isolamento totale)
+      async function runWithConcurrency(items, limit, worker, signal) {
+        const results = new Array(items.length);
+        let nextIndex = 0;
+        const maxWorkers = Math.max(1, Math.min(limit, items.length));
+
+        async function runner() {
+          while (true) {
+            if (signal?.aborted) throw new DOMException("Annullato", "AbortError");
+            const idx = nextIndex++;
+            if (idx >= items.length) return;
+            results[idx] = await worker(items[idx], idx);
+          }
+        }
+
+        await Promise.all(Array.from({ length: maxWorkers }, () => runner()));
+        return results;
+      }
+
+      // Chiamata REST nativa a Gemini API con gestione thought-parts e backoff su 429/503
+      async function callGemini({
+        model,
+        systemInstruction,
+        userPrompt,
+        temperature = 0.5,
+        responseSchema = null,
+        signal = null,
+        onRetry = null
+      }) {
+        const apiKey = getApiKey();
+        if (!apiKey) throw new Error("Inserisci prima la tua Gemini API Key nelle Impostazioni.");
+
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+
+        const generationConfig = { temperature };
+        if (responseSchema) {
+          generationConfig.responseMimeType = "application/json";
+          generationConfig.responseSchema = responseSchema;
+        }
+
+        const payload = {
+          contents: [{ role: "user", parts: [{ text: userPrompt }] }],
+          generationConfig
+        };
+
+        if (systemInstruction) {
+          payload.system_instruction = { parts: [{ text: systemInstruction }] };
+        }
+
+        const maxRetries = 4;
+        for (let attempt = 0; attempt <= maxRetries; attempt++) {
+          if (signal?.aborted) throw new DOMException("Annullato", "AbortError");
+
+          let res;
+          try {
+            res = await fetch(url, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload),
+              signal
+            });
+          } catch (err) {
+            if (err.name === "AbortError") throw err;
+            if (attempt < maxRetries) {
+              const waitMs = 3000 * Math.pow(2, attempt);
+              onRetry?.(`Errore rete, riprovo tra ${Math.round(waitMs / 1000)}s...`);
+              await sleep(waitMs, signal);
+              continue;
+            }
+            throw new Error(`Errore di connessione verso Gemini API: ${err.message}`);
+          }
+
+          if (res.status === 429 || res.status === 503 || res.status === 500) {
+            if (attempt < maxRetries) {
+              const retryAfter = Number(res.headers.get("Retry-After"));
+              const baseMs = Number.isFinite(retryAfter) && retryAfter > 0
+                ? retryAfter * 1000
+                : Math.min(35000, 4000 * Math.pow(2, attempt));
+              const jitter = Math.floor(Math.random() * 1200);
+              const waitMs = baseMs + jitter;
+              onRetry?.(`HTTP ${res.status} (rate limit), attendo ${Math.round(waitMs / 1000)}s...`);
+              await sleep(waitMs, signal);
+              continue;
+            }
+            const errTxt = await res.text().catch(() => "");
+            throw new Error(`Errore Gemini HTTP ${res.status} dopo ${maxRetries + 1} tentativi. Riduci la concorrenza nelle Impostazioni. ${errTxt.slice(0, 180)}`);
+          }
+
+          if (!res.ok) {
+            const errData = await res.json().catch(() => ({}));
+            const detail = errData?.error?.message || `HTTP ${res.status}`;
+            throw new Error(`Errore Gemini API (${model}): ${detail}`);
+          }
+
+          const data = await res.json();
+          const parts = data?.candidates?.[0]?.content?.parts || [];
+          // Filtra eventuali blocchi "thought" dei modelli Gemini 2.5+
+          const finalParts = parts.filter((p) => !p.thought && typeof p.text === "string");
+          const rawText = (finalParts.length ? finalParts : parts)
+            .map((p) => p.text || "")
+            .join("")
+            .trim();
+
+          if (!rawText) {
+            const blockReason = data?.promptFeedback?.blockReason || data?.candidates?.[0]?.finishReason || "risposta vuota";
+            throw new Error(`Risposta non utilizzabile da ${model} (${blockReason}).`);
+          }
+
+          if (responseSchema) {
+            const cleaned = rawText
+              .replace(/^```(?:json)?\s*/i, "")
+              .replace(/\s*```$/i, "")
+              .trim();
+            try {
+              return JSON.parse(cleaned);
+            } catch (e) {
+              if (attempt < 2) {
+                onRetry?.("JSON malformato, riprovo...");
+                await sleep(1500, signal);
+                continue;
+              }
+              throw new Error(`Impossibile interpretare JSON da ${model}: ${e.message}`);
+            }
+          }
+
+          return rawText;
+        }
+      }
+
+      // Costruisce il testo del caso in base alla modalità
+      function buildCaseText() {
+        if (currentMode === "single") {
+          const idea = $("idea-text").value.trim();
+          if (!idea) throw new Error("Inserisci l'idea o la decisione da valutare.");
+          return `MODALITÀ: VALUTAZIONE SINGOLA IDEA\nIDEA / DECISIONE IMPUTATA:\n${idea}`;
+        } else {
+          const a = $("opt-a-text").value.trim();
+          const b = $("opt-b-text").value.trim();
+          const ctx = $("ab-context").value.trim();
+          if (!a || !b) throw new Error("Compila sia l'Opzione A sia l'Opzione B.");
+          return `MODALITÀ: CONFRONTO A vs B\nOPZIONE A:\n${a}\n\nOPZIONE B:\n${b}${ctx ? `\n\nCONTESTO E VINCOLI:\n${ctx}` : ""}`;
+        }
+      }
+
+      // Fase 0: verifica dati mancanti
+      async function runPhase0(caseText) {
+        const settings = getSettings();
+        setProgress("Fase 0 — Verifica completezza dati...", 8, "Controllo se mancano variabili critiche...");
+        const schema = {
+          type: "OBJECT",
+          properties: {
+            sufficiente: { type: "BOOLEAN" },
+            domande: {
+              type: "ARRAY",
+              items: { type: "STRING" }
+            }
+          },
+          required: ["sufficiente", "domande"]
+        };
+
+        const res = await callGemini({
+          model: settings.modelJuror,
+          systemInstruction:
+            "Sei il cancelliere di un tribunale analitico. Valuta se il testo contiene abbastanza informazioni per un processo concreto tra Accusa e Difesa. " +
+            "Chiedi domande SOLO se mancano variabili davvero critiche (budget, orizzonte temporale, vincoli chiave, alternative). Massimo 3 domande secche, in italiano.",
+          userPrompt: `Valuta se servono chiarimenti essenziali prima del processo:\n\n${caseText}`,
+          temperature: 0.2,
+          responseSchema: schema,
+          signal: abortController.signal,
+          onRetry: (m) => setProgress("Fase 0 — Attesa API...", 8, m)
+        });
+
+        return res;
+      }
+
+      // Flusso completo del processo (18 chiamate isolate)
+      async function runTribunalProcess(fullCaseText) {
+        const settings = getSettings();
+        const isAB = currentMode === "ab";
+        const signal = abortController.signal;
+
+        const accusaSys = isAB
+          ? "Sei un Pubblico Ministero spietato ma intellettualmente onesto. In questo confronto A vs B, il tuo ruolo è DEMOLIRE l'Opzione A e SOSTENERE l'Opzione B. Porta 3-4 argomenti concreti con numeri, rischi reali e costo-opportunità. Stile diretto, asciutto, italiano, zero teatralità."
+          : "Sei un Pubblico Ministero spietato ma intellettualmente onesto. Costruisci il caso più solido e concreto CONTRO l'idea/scelta dell'utente (3-4 punti di rottura reali con numeri, attriti operativi, bias e rischi). Stile diretto, asciutto, italiano, zero teatralità.";
+
+        const difesaSys = isAB
+          ? "Sei un Avvocato Difensore lucido e privo di retorica. In questo confronto A vs B, il tuo ruolo è SOSTENERE l'Opzione A e SMONTARE l'Opzione B. Porta 3-4 vantaggi concreti, leve asimmetriche e tenuta reale. Stile diretto, asciutto, italiano, zero entusiasmo vuoto."
+          : "Sei un Avvocato Difensore lucido e privo di retorica. Costruisci il caso più solido e realistico A FAVORE dell'idea/scelta dell'utente (3-4 vantaggi concreti, leve asimmetriche e margini di tenuta). Stile diretto, asciutto, italiano, zero entusiasmo vuoto.";
+
+        const dynamicJurorSchema = {
+          type: "OBJECT",
+          properties: {
+            giurati: {
+              type: "ARRAY",
+              items: {
+                type: "OBJECT",
+                properties: {
+                  nome: { type: "STRING" },
+                  prospettiva: { type: "STRING" }
+                },
+                required: ["nome", "prospettiva"]
+              }
+            }
+          },
+          required: ["giurati"]
+        };
+
+        // FASE 1: Giurati dinamici + Accusa + Difesa (rispettando concorrenza max)
+        setProgress("Fase 1/4 — Giuria di dominio, Accusa e Difesa...", 15, "Avvio chiamate isolate di Fase 1...");
+
+        const phase1Tasks = [
+          () => callGemini({
+            model: settings.modelJuror,
+            systemInstruction: "Genera esattamente 6 profili di giurati di dominio specifici, concreti e con interessi spesso opposti per giudicare il caso proposto. Rispondi in italiano.",
+            userPrompt: `Genera 6 giurati di dominio per questo caso (non ripetere Contabile, Pragmatico, Scettico, Stratega, Cinico, Minimizzatore):\n\n${fullCaseText}`,
+            temperature: 0.6,
+            responseSchema: dynamicJurorSchema,
+            signal,
+            onRetry: (m) => setProgress("Fase 1/4 — Giuria dinamica", 18, m)
+          }),
+          () => callGemini({
+            model: settings.modelHeavy,
+            systemInstruction: accusaSys,
+            userPrompt: `${fullCaseText}\n\nScrivi l'Atto di Accusa completo.`,
+            temperature: 0.5,
+            signal,
+            onRetry: (m) => setProgress("Fase 1/4 — Accusa", 22, m)
+          }),
+          () => callGemini({
+            model: settings.modelHeavy,
+            systemInstruction: difesaSys,
+            userPrompt: `${fullCaseText}\n\nScrivi la Memoria Difensiva completa.`,
+            temperature: 0.5,
+            signal,
+            onRetry: (m) => setProgress("Fase 1/4 — Difesa", 26, m)
+          })
+        ];
+
+        const [dynRaw, accusa, difesa] = await runWithConcurrency(
+          phase1Tasks,
+          settings.concurrency,
+          (fn) => fn(),
+          signal
+        );
+
+        const dynamicJurors = (dynRaw?.giurati || []).slice(0, 6).map((j) => ({
+          nome: j.nome,
+          prospettiva: j.prospettiva,
+          tipo: "Dominio"
+        }));
+
+        // FASE 2: Controrepliche incrociate (ognuno legge l'altro senza vedere la replica altrui)
+        setProgress("Fase 2/4 — Controrepliche incrociate...", 38, "Accusa e Difesa smontano le tesi avversarie...");
+
+        const phase2Tasks = [
+          () => callGemini({
+            model: settings.modelHeavy,
+            systemInstruction: accusaSys,
+            userPrompt: `${fullCaseText}\n\nTUA ACCUSA:\n${accusa}\n\nMEMORIA DIFENSIVA:\n${difesa}\n\nSmonta direttamente i 2 punti più forti della Difesa spiegando perché sono fragili o ottimistici.`,
+            temperature: 0.5,
+            signal,
+            onRetry: (m) => setProgress("Fase 2/4 — Replica Accusa", 42, m)
+          }),
+          () => callGemini({
+            model: settings.modelHeavy,
+            systemInstruction: difesaSys,
+            userPrompt: `${fullCaseText}\n\nTUA DIFESA:\n${difesa}\n\nATTO DI ACCUSA:\n${accusa}\n\nRispondi direttamente ai 2 attacchi più pericolosi dell'Accusa mostrando come mitigarli o perché il rischio è accettabile.`,
+            temperature: 0.5,
+            signal,
+            onRetry: (m) => setProgress("Fase 2/4 — Replica Difesa", 46, m)
+          })
+        ];
+
+        const [replicaAccusa, replicaDifesa] = await runWithConcurrency(
+          phase2Tasks,
+          settings.concurrency,
+          (fn) => fn(),
+          signal
+        );
+
+        const dossier =
+          `## CASO\n${fullCaseText}\n\n` +
+          `## ATTO DI ACCUSA\n${accusa}\n\n` +
+          `## MEMORIA DIFENSIVA\n${difesa}\n\n` +
+          `## REPLICA DELL'ACCUSA\n${replicaAccusa}\n\n` +
+          `## REPLICA DELLA DIFESA\n${replicaDifesa}`;
+
+        // FASE 3: Voto segreto isolato dei 12 giurati
+        const allJurors = [...FIXED_JURORS, ...dynamicJurors];
+        const liveGrid = $("jury-live-grid");
+        liveGrid.classList.remove("hidden");
+        liveGrid.innerHTML = allJurors.map((j, i) => `
+          <div id="jp-${i}" class="juror-pill">
+            <span class="jp-name">${i + 1}. ${escapeHtml(j.nome)}</span>
+            <span class="jp-state">In attesa...</span>
+          </div>
+        `).join("");
+
+        const voteEnum = isAB ? ["OPZIONE_A", "OPZIONE_B"] : ["COLPEVOLE", "NON COLPEVOLE"];
+        const voteSchema = {
+          type: "OBJECT",
+          properties: {
+            voto: { type: "STRING", enum: voteEnum },
+            motivazione: { type: "STRING" }
+          },
+          required: ["voto", "motivazione"]
+        };
+
+        let completedJurors = 0;
+        setProgress(
+          `Fase 3/4 — Voto segreto (0/${allJurors.length})...`,
+          50,
+          `Concorrenza attiva: ${settings.concurrency} giurati isolati alla volta.`
+        );
+
+        const votes = await runWithConcurrency(
+          allJurors,
+          settings.concurrency,
+          async (juror, idx) => {
+            const pill = $(`jp-${idx}`);
+            const stateEl = pill.querySelector(".jp-state");
+            stateEl.textContent = "Sta votando...";
+
+            const convention = isAB
+              ? "- OPZIONE_A = ritieni complessivamente migliore l'Opzione A.\n- OPZIONE_B = ritieni complessivamente migliore l'Opzione B."
+              : "- COLPEVOLE = l'idea/scelta è debole, rischiosa o svantaggiosa (BOCCIATA).\n- NON COLPEVOLE = l'idea/scelta è solida, sostenibile e merita di essere perseguita (APPROVATA).";
+
+            const jurorSys =
+              `Sei un giurato indipendente chiamato '${juror.nome}'.\n` +
+              `La tua lente esclusiva di valutazione è: ${juror.prospettiva}\n\n` +
+              `CONVENZIONE OBBLIGATORIA:\n${convention}\n\n` +
+              `REGOLE:\n` +
+              `- Vota in modo rigorosamente coerente con la tua lente, senza diplomazia e senza compromessi.\n` +
+              `- Vietate astensioni. Scrivi la motivazione decisiva in 1-2 frasi secche in italiano.`;
+
+            const res = await callGemini({
+              model: settings.modelJuror,
+              systemInstruction: jurorSys,
+              userPrompt: `Leggi il fascicolo processuale ed emetti il tuo voto segreto:\n\n${dossier}`,
+              temperature: Number(settings.jurorTemp) || 0.7,
+              responseSchema: voteSchema,
+              signal,
+              onRetry: (m) => {
+                pill.classList.add("vote-retry");
+                stateEl.textContent = m;
+              }
+            });
+
+            completedJurors++;
+            pill.classList.remove("vote-retry");
+            if (isAB) {
+              pill.classList.add(res.voto === "OPZIONE_A" ? "vote-a" : "vote-b");
+              stateEl.textContent = res.voto === "OPZIONE_A" ? "OPZIONE A" : "OPZIONE B";
+            } else {
+              pill.classList.add(res.voto === "COLPEVOLE" ? "vote-bad" : "vote-good");
+              stateEl.textContent = res.voto;
+            }
+
+            const pct = 50 + (completedJurors / allJurors.length) * 38;
+            setProgress(
+              `Fase 3/4 — Voto segreto (${completedJurors}/${allJurors.length})`,
+              pct,
+              `Voto registrato: ${juror.nome} → ${stateEl.textContent}`
+            );
+
+            return {
+              nome: juror.nome,
+              prospettiva: juror.prospettiva,
+              tipo: juror.tipo,
+              voto: res.voto,
+              motivazione: res.motivazione
+            };
+          },
+          signal
+        );
+
+        // Conteggio deterministico in JS
+        const leftKey = isAB ? "OPZIONE_A" : "COLPEVOLE";
+        const rightKey = isAB ? "OPZIONE_B" : "NON COLPEVOLE";
+        const leftCount = votes.filter((v) => v.voto === leftKey).length;
+        const rightCount = votes.filter((v) => v.voto === rightKey).length;
+
+        let verdictLabel, verdictTone;
+        if (isAB) {
+          if (leftCount > rightCount) {
+            verdictLabel = "VINCE OPZIONE A";
+            verdictTone = "opt-a";
+          } else if (rightCount > leftCount) {
+            verdictLabel = "VINCE OPZIONE B";
+            verdictTone = "opt-b";
+          } else {
+            verdictLabel = "GIURIA IN STALLO (PARITÀ)";
+            verdictTone = "tie";
+          }
+        } else {
+          if (leftCount > rightCount) {
+            verdictLabel = "COLPEVOLE — Idea bocciata allo stato attuale";
+            verdictTone = "bad";
+          } else if (rightCount > leftCount) {
+            verdictLabel = "NON COLPEVOLE — Idea approvata";
+            verdictTone = "good";
+          } else {
+            verdictLabel = "GIURIA IN STALLO — Serve un test prima di decidere";
+            verdictTone = "tie";
+          }
+        }
+
+        // FASE 4: Sentenza del Giudice
+        setProgress("Fase 4/4 — Sentenza del Giudice...", 92, "Elaborazione motivazione e condizioni...");
+
+        const judgeSchema = {
+          type: "OBJECT",
+          properties: {
+            motivo_sentenza: { type: "STRING" },
+            condizioni_ribaltamento: {
+              type: "ARRAY",
+              items: { type: "STRING" }
+            },
+            primo_test_pratico: { type: "STRING" }
+          },
+          required: ["motivo_sentenza", "condizioni_ribaltamento", "primo_test_pratico"]
+        };
+
+        const votesSummary = votes
+          .map((v, i) => `${i + 1}. ${v.nome} (${v.voto}): ${v.motivazione}`)
+          .join("\n");
+
+        const judgeSys =
+          "Sei un Giudice imparziale, diretto e asciutto. Non alterare mai il conteggio dei voti ricevuto. " +
+          "Restituisci in italiano:\n" +
+          "- motivo_sentenza: 2-3 frasi secche sulla prova o variabile decisiva che ha orientato la giuria.\n" +
+          "- condizioni_ribaltamento: esattamente 3 condizioni concrete, misurabili e verificabili che ribalterebbero l'esito (o sbloccherebbero lo stallo).\n" +
+          "- primo_test_pratico: 1 test reale e a basso costo da fare subito prima di impegnare tempo o denaro.";
+
+        const judge = await callGemini({
+          model: settings.modelHeavy,
+          systemInstruction: judgeSys,
+          userPrompt:
+            `${dossier}\n\n` +
+            `ESITO GIURIA (BLOCCATO): ${leftCount} ${leftKey} – ${rightCount} ${rightKey} → ${verdictLabel}\n\n` +
+            `VOTI SEGRETI:\n${votesSummary}`,
+          temperature: 0.3,
+          responseSchema: judgeSchema,
+          signal,
+          onRetry: (m) => setProgress("Fase 4/4 — Sentenza del Giudice", 94, m)
+        });
+
+        setProgress("Processo completato", 100, "Tutti i 12 voti isolati e la sentenza sono pronti.");
+
+        const resultObj = {
+          id: Date.now(),
+          timestamp: new Date().toLocaleString("it-IT"),
+          mode: currentMode,
+          caseText: fullCaseText,
+          models: { heavy: settings.modelHeavy, juror: settings.modelJuror },
+          leftKey,
+          rightKey,
+          leftCount,
+          rightCount,
+          verdictLabel,
+          verdictTone,
+          judge,
+          votes,
+          acts: { accusa, difesa, replicaAccusa, replicaDifesa }
+        };
+
+        saveToHistory(resultObj);
+        renderResult(resultObj);
+      }
+
+      // Storico locale (ultimi 15 processi)
+      function getHistory() {
+        try {
+          return JSON.parse(safeStorageGet(STORAGE_KEYS.HISTORY, "[]"));
+        } catch {
+          return [];
+        }
+      }
+
+      function saveToHistory(entry) {
+        const list = getHistory();
+        list.unshift(entry);
+        safeStorageSet(STORAGE_KEYS.HISTORY, JSON.stringify(list.slice(0, 15)));
+      }
+
+      function buildMarkdownExport(r) {
+        const leftLabel = r.leftKey.replace("_", " ");
+        const rightLabel = r.rightKey.replace("_", " ");
+        const condTitle = r.verdictTone === "good" ? "Condizioni di revoca" : "Condizioni per ribaltare il verdetto";
+        const conds = (r.judge.condizioni_ribaltamento || []).map((c, i) => `${i + 1}. ${c}`).join("\n");
+        const table = r.votes
+          .map((v, i) => `| ${i + 1} | ${v.nome} (${v.tipo}) | ${v.voto.replace("_", " ")} | ${v.motivazione.replace(/\|/g, "\\|")} |`)
+          .join("\n");
+
+        return [
+          `# Il Tribunale — Verbale (${r.timestamp})`,
+          `**Verdetto:** ${r.verdictLabel}`,
+          `**Conteggio:** ${r.leftCount} ${leftLabel} – ${r.rightCount} ${rightLabel}`,
+          `**Modelli:** Atti/Giudice \`${r.models.heavy}\` | Giurati \`${r.models.juror}\``,
+          ``,
+          `## Motivo della Sentenza`,
+          r.judge.motivo_sentenza,
+          ``,
+          `## ${condTitle}`,
+          conds,
+          ``,
+          `## Prima Verifica sul Campo`,
+          r.judge.primo_test_pratico,
+          ``,
+          `## I 12 Voti Segreti`,
+          `| # | Giurato | Voto | Motivazione |`,
+          `|---|---|---|---|`,
+          table,
+          ``,
+          `## Caso Imputato`,
+          r.caseText,
+          ``,
+          `## Atto di Accusa`,
+          r.acts.accusa,
+          ``,
+          `## Memoria Difensiva`,
+          r.acts.difesa,
+          ``,
+          `## Replica dell'Accusa`,
+          r.acts.replicaAccusa,
+          ``,
+          `## Replica della Difesa`,
+          r.acts.replicaDifesa
+        ].join("\n");
+      }
+
+      function renderResult(r) {
+        currentResult = r;
+        juryFilter = "ALL";
+        $("results-wrapper").classList.remove("hidden");
+
+        const total = Math.max(1, r.leftCount + r.rightCount);
+        const leftPct = Math.round((r.leftCount / total) * 100);
+        const rightPct = 100 - leftPct;
+        const leftColor = r.mode === "ab" ? "var(--opt-a)" : "var(--danger)";
+        const rightColor = r.mode === "ab" ? "var(--opt-b)" : "var(--success)";
+        const leftLabel = r.leftKey.replace("_", " ");
+        const rightLabel = r.rightKey.replace("_", " ");
+        const condHeading = r.verdictTone === "good"
+          ? "Condizioni di revoca (cosa ribalterebbe l'approvazione)"
+          : "Condizioni per l'assoluzione / ribaltamento";
+
+        // TAB 1: VERDETTO
+        $("tab-verdict").innerHTML = `
+          <div class="verdict-box ${r.verdictTone}">
+            <div class="verdict-title">${escapeHtml(r.verdictLabel)}</div>
+            <div class="verdict-score">${r.leftCount} ${leftLabel} (${leftPct}%) — ${r.rightCount} ${rightLabel} (${rightPct}%)</div>
+            <div class="vote-bar">
+              <div class="vote-bar-left" style="width:${leftPct}%; background:${leftColor};"></div>
+              <div class="vote-bar-right" style="width:${rightPct}%; background:${rightColor};"></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3>Motivo della sentenza</h3>
+            <p style="margin:0;">${escapeHtml(r.judge.motivo_sentenza)}</p>
+          </div>
+
+          <div class="card">
+            <h3>${condHeading}</h3>
+            <ol class="cond-list">
+              ${(r.judge.condizioni_ribaltamento || []).map((c) => `<li>${escapeHtml(c)}</li>`).join("")}
+            </ol>
+          </div>
+
+          <div class="card">
+            <h3>Prima verifica sul campo</h3>
+            <p style="margin:0;">${escapeHtml(r.judge.primo_test_pratico)}</p>
+          </div>
+
+          <div class="row-between" style="margin-top:8px;">
+            <button id="btn-copy-md" class="btn-sm" type="button">Copia Markdown</button>
+            <button id="btn-download-md" class="btn-sm" type="button">Scarica .md</button>
+            <span id="export-msg" class="muted"></span>
+          </div>
+        `;
+
+        $("btn-copy-md").addEventListener("click", async () => {
+          const md = buildMarkdownExport(r);
+          try {
+            await navigator.clipboard.writeText(md);
+            $("export-msg").textContent = "Copiato negli appunti.";
+          } catch {
+            $("export-msg").textContent = "Copia bloccata dal browser: usa Scarica .md.";
+          }
+        });
+
+        $("btn-download-md").addEventListener("click", () => {
+          const md = buildMarkdownExport(r);
+          const blob = new Blob([md], { type: "text/markdown;charset=utf-8" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = `tribunale-${new Date(r.id).toISOString().slice(0, 16).replace(/[:T]/g, "-")}.md`;
+          a.click();
+          URL.revokeObjectURL(a.href);
+        });
+
+        // TAB 2: 12 GIURATI
+        renderJuryTab(r);
+
+        // TAB 3: ATTI
+        const accTitle = r.mode === "ab" ? "Atto di Accusa (Contro A / Pro B)" : "Atto di Accusa (Perché fallirà)";
+        const difTitle = r.mode === "ab" ? "Memoria Difensiva (Pro A / Contro B)" : "Memoria Difensiva (Perché funzionerà)";
+        $("tab-acts").innerHTML = `
+          <details class="act-box" open>
+            <summary>${accTitle}</summary>
+            <div class="act-content">${renderSimpleMarkdown(r.acts.accusa)}</div>
+          </details>
+          <details class="act-box">
+            <summary>${difTitle}</summary>
+            <div class="act-content">${renderSimpleMarkdown(r.acts.difesa)}</div>
+          </details>
+          <details class="act-box">
+            <summary>Controreplica dell'Accusa</summary>
+            <div class="act-content">${renderSimpleMarkdown(r.acts.replicaAccusa)}</div>
+          </details>
+          <details class="act-box">
+            <summary>Controreplica della Difesa</summary>
+            <div class="act-content">${renderSimpleMarkdown(r.acts.replicaDifesa)}</div>
+          </details>
+          <details class="act-box">
+            <summary>Fascicolo Imputato (Input originale)</summary>
+            <div class="act-content"><p style="white-space:pre-wrap;">${escapeHtml(r.caseText)}</p></div>
+          </details>
+        `;
+
+        // TAB 4: STORICO
+        renderHistoryTab();
+        switchTab("verdict");
+      }
+
+      function renderJuryTab(r) {
+        const leftLabel = r.leftKey.replace("_", " ");
+        const rightLabel = r.rightKey.replace("_", " ");
+        const filtered = juryFilter === "ALL"
+          ? r.votes
+          : r.votes.filter((v) => v.voto === juryFilter);
+
+        const cardsHtml = filtered.map((v, i) => {
+          let badgeClass = "badge-good";
+          if (r.mode === "ab") badgeClass = v.voto === "OPZIONE_A" ? "badge-a" : "badge-b";
+          else badgeClass = v.voto === "COLPEVOLE" ? "badge-bad" : "badge-good";
+
+          return `
+            <div class="juror-card">
+              <div class="juror-header">
+                <div>
+                  <strong>${i + 1}. ${escapeHtml(v.nome)}</strong>
+                  <span class="badge badge-tag" style="margin-left:5px;">${escapeHtml(v.tipo)}</span>
+                </div>
+                <span class="badge ${badgeClass}">${escapeHtml(v.voto.replace("_", " "))}</span>
+              </div>
+              <div class="juror-lens">${escapeHtml(v.prospettiva)}</div>
+              <p class="juror-reason">${escapeHtml(v.motivazione)}</p>
+            </div>
+          `;
+        }).join("");
+
+        $("tab-jury").innerHTML = `
+          <div class="filter-bar">
+            <button class="btn-sm ${juryFilter === "ALL" ? "active" : ""}" data-f="ALL" type="button">Tutti (${r.votes.length})</button>
+            <button class="btn-sm ${juryFilter === r.leftKey ? "active" : ""}" data-f="${r.leftKey}" type="button">${leftLabel} (${r.leftCount})</button>
+            <button class="btn-sm ${juryFilter === r.rightKey ? "active" : ""}" data-f="${r.rightKey}" type="button">${rightLabel} (${r.rightCount})</button>
+          </div>
+          ${cardsHtml}
+        `;
+
+        $("tab-jury").querySelectorAll(".filter-bar button").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            juryFilter = btn.dataset.f;
+            renderJuryTab(r);
+          });
+        });
+      }
+
+      function renderHistoryTab() {
+        const list = getHistory();
+        if (!list.length) {
+          $("tab-history").innerHTML = `<div class="card muted">Nessun processo salvato nello storico locale.</div>`;
+          return;
+        }
+        $("tab-history").innerHTML = `
+          <div class="row-between" style="margin-bottom:10px;">
+            <span class="muted">Ultimi ${list.length} processi salvati sul dispositivo</span>
+            <button id="btn-clear-history" class="btn-danger btn-sm" type="button">Svuota storico</button>
+          </div>
+          ${list.map((item, idx) => `
+            <div class="history-item" data-idx="${idx}">
+              <div class="row-between" style="margin-bottom:4px;">
+                <strong>${escapeHtml(item.verdictLabel)}</strong>
+                <span class="muted">${escapeHtml(item.timestamp)}</span>
+              </div>
+              <div class="muted" style="margin-bottom:4px;">
+                ${item.leftCount} ${item.leftKey.replace("_", " ")} — ${item.rightCount} ${item.rightKey.replace("_", " ")}
+              </div>
+              <div style="font-size:0.84rem; opacity:0.85; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
+                ${escapeHtml(item.caseText.replace(/\s+/g, " ").slice(0, 140))}
+              </div>
+            </div>
+          `).join("")}
+        `;
+
+        $("btn-clear-history").addEventListener("click", () => {
+          safeStorageRemove(STORAGE_KEYS.HISTORY);
+          renderHistoryTab();
+        });
+
+        $("tab-history").querySelectorAll(".history-item").forEach((el) => {
+          el.addEventListener("click", () => {
+            const item = list[Number(el.dataset.idx)];
+            if (item) renderResult(item);
+          });
+        });
+      }
+
+      function switchTab(tabName) {
+        document.querySelectorAll(".tab-btn").forEach((b) => {
+          b.classList.toggle("active", b.dataset.tab === tabName);
+        });
+        document.querySelectorAll(".tab-pane").forEach((p) => {
+          p.classList.toggle("hidden", p.id !== `tab-${tabName}`);
+        });
+      }
+
+      function setRunningUI(running) {
+        $("btn-start").disabled = running;
+        $("btn-abort").classList.toggle("hidden", !running);
+        $("btn-phase0-submit").disabled = running;
+        $("btn-phase0-skip").disabled = running;
+      }
+
+      // Avvio principale
+      async function handleStart() {
+        showError("");
+        $("phase0-panel").classList.add("hidden");
+        $("jury-live-grid").classList.add("hidden");
+
+        let caseText;
+        try {
+          caseText = buildCaseText();
+        } catch (err) {
+          showError(err.message);
+          return;
+        }
+
+        if (!getApiKey()) {
+          $("settings-panel").classList.remove("hidden");
+          showError("Inserisci e salva la tua Gemini API Key prima di avviare il processo.");
+          return;
+        }
+
+        pendingCaseText = caseText;
+        abortController = new AbortController();
+        setRunningUI(true);
+
+        try {
+          if ($("chk-phase0").checked) {
+            const p0 = await runPhase0(caseText);
+            if (!p0.sufficiente && Array.isArray(p0.domande) && p0.domande.length > 0) {
+              setRunningUI(false);
+              $("progress-panel").classList.add("hidden");
+              const qContainer = $("phase0-questions");
+              qContainer.innerHTML = p0.domande.slice(0, 4).map((q, i) => `
+                <label for="p0-a-${i}">${i + 1}. ${escapeHtml(q)}</label>
+                <input id="p0-a-${i}" data-q="${escapeHtml(q)}" type="text" placeholder="La tua risposta..." />
+              `).join("");
+              $("phase0-panel").classList.remove("hidden");
+              return;
+            }
+          }
+          await runTribunalProcess(caseText);
+        } catch (err) {
+          if (err.name === "AbortError") {
+            setProgress("Processo annullato", 0, "Interrotto dall'utente.");
+          } else {
+            showError(err.message);
+          }
+        } finally {
+          setRunningUI(false);
+        }
+      }
+
+      async function resumeAfterPhase0(skip) {
+        showError("");
+        let enriched = pendingCaseText;
+        if (!skip) {
+          const inputs = [...$("phase0-questions").querySelectorAll("input")];
+          const qa = inputs
+            .map((inp, i) => `${i + 1}. ${inp.dataset.q}\nRisposta: ${inp.value.trim() || "(non specificato)"}`)
+            .join("\n\n");
+          enriched += `\n\nCHIARIMENTI AGGIUNTIVI (FASE 0):\n${qa}`;
+        } else {
+          enriched += `\n\nNOTA: Procedi esplicitando le ipotesi ragionevoli sui dati non forniti.`;
+        }
+
+        $("phase0-panel").classList.add("hidden");
+        abortController = new AbortController();
+        setRunningUI(true);
+
+        try {
+          await runTribunalProcess(enriched);
+        } catch (err) {
+          if (err.name === "AbortError") {
+            setProgress("Processo annullato", 0, "Interrotto dall'utente.");
+          } else {
+            showError(err.message);
+          }
+        } finally {
+          setRunningUI(false);
+        }
+      }
+
+      // Inizializzazione UI ed eventi
+      function init() {
+        // Avviso se aperto via content:// o file:// su Android
+        if (location.protocol === "content:" || location.protocol === "file:") {
+          const warn = $("env-warning");
+          warn.textContent =
+            "File aperto in locale (" + location.protocol + "). Alcuni browser Android non mantengono salvata la API Key tra una sessione e l'altra: per salvarla in modo permanente e installarla sulla Home, ospita questo file su GitHub Pages o servilo via localhost.";
+          warn.classList.remove("hidden");
+        }
+
+        const settings = getSettings();
+        $("api-key").value = safeStorageGet(STORAGE_KEYS.API_KEY, "");
+        $("model-heavy").value = settings.modelHeavy;
+        $("model-juror").value = settings.modelJuror;
+        $("concurrency").value = String(settings.concurrency);
+        $("juror-temp").value = String(settings.jurorTemp);
+
+        if (!$("api-key").value) {
+          $("settings-panel").classList.remove("hidden");
+        }
+
+        // Mostra storico se già presente
+        const hist = getHistory();
+        if (hist.length) {
+          $("results-wrapper").classList.remove("hidden");
+          renderResult(hist[0]);
+        }
+
+        $("btn-settings").addEventListener("click", () => {
+          $("settings-panel").classList.toggle("hidden");
+        });
+
+        $("btn-close-settings").addEventListener("click", () => {
+          $("settings-panel").classList.add("hidden");
+        });
+
+        $("btn-save-settings").addEventListener("click", () => {
+          const key = $("api-key").value.trim();
+          const newSettings = {
+            modelHeavy: $("model-heavy").value.trim() || DEFAULT_SETTINGS.modelHeavy,
+            modelJuror: $("model-juror").value.trim() || DEFAULT_SETTINGS.modelJuror,
+            concurrency: Number($("concurrency").value) || 3,
+            jurorTemp: Math.min(1.2, Math.max(0.1, Number($("juror-temp").value) || 0.7))
+          };
+          if (key) safeStorageSet(STORAGE_KEYS.API_KEY, key);
+          const ok = safeStorageSet(STORAGE_KEYS.SETTINGS, JSON.stringify(newSettings));
+          $("settings-msg").textContent = ok
+            ? "Impostazioni salvate in locale."
+            : "Impostazioni attive per questa sessione (localStorage bloccato dal browser).";
+        });
+
+        $("btn-clear-key").addEventListener("click", () => {
+          $("api-key").value = "";
+          safeStorageRemove(STORAGE_KEYS.API_KEY);
+          $("settings-msg").textContent = "API Key rimossa dal dispositivo.";
+        });
+
+        $("btn-test-key").addEventListener("click", async () => {
+          $("settings-msg").textContent = "Verifica chiave in corso...";
+          try {
+            const out = await callGemini({
+              model: $("model-juror").value.trim() || DEFAULT_SETTINGS.modelJuror,
+              userPrompt: "Rispondi solo con la parola: OK",
+              temperature: 0
+            });
+            $("settings-msg").textContent = `Chiave valida. Risposta modello: ${out.slice(0, 30)}`;
+          } catch (err) {
+            $("settings-msg").textContent = `Fallito: ${err.message}`;
+          }
+        });
+
+        $("mode-single").addEventListener("click", () => {
+          currentMode = "single";
+          $("mode-single").classList.add("active");
+          $("mode-ab").classList.remove("active");
+          $("single-inputs").classList.remove("hidden");
+          $("ab-inputs").classList.add("hidden");
+        });
+
+        $("mode-ab").addEventListener("click", () => {
+          currentMode = "ab";
+          $("mode-ab").classList.add("active");
+          $("mode-single").classList.remove("active");
+          $("ab-inputs").classList.remove("hidden");
+          $("single-inputs").classList.add("hidden");
+        });
+
+        $("btn-start").addEventListener("click", handleStart);
+        $("btn-abort").addEventListener("click", () => abortController?.abort());
+        $("btn-phase0-submit").addEventListener("click", () => resumeAfterPhase0(false));
+        $("btn-phase0-skip").addEventListener("click", () => resumeAfterPhase0(true));
+
+        document.querySelectorAll(".tab-btn").forEach((btn) => {
+          btn.addEventListener("click", () => switchTab(btn.dataset.tab));
+        });
+      }
+
+      init();
+    })();
+  </script>
+</body>
+</html>
